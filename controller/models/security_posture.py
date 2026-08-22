@@ -9,4 +9,5 @@ class SecurityPosture:
     open_ports: List[int]
     running_services: List[str]
     unexpected_ports: List[int]
+    unexpected_services: List[str]
     compliance_score: float

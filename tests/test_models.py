@@ -37,13 +37,15 @@ def test_security_posture_model():
         selinux_mode="Enforcing",
         firewall_state="running",
         open_ports=[22, 80],
-        running_services=["sshd", "httpd"],
+        running_services=["sshd.service", "httpd.service"],
         unexpected_ports=[],
+        unexpected_services=[],
         compliance_score=100.0,
     )
 
     assert posture.selinux_mode == "Enforcing"
     assert posture.unexpected_ports == []
+    assert posture.unexpected_services == []
 
 
 def test_decision_model():

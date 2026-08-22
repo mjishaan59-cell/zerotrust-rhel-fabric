@@ -14,8 +14,9 @@ def healthy_posture():
         selinux_mode="Enforcing",
         firewall_state="running",
         open_ports=[22, 80],
-        running_services=["sshd", "httpd"],
+        running_services=["sshd.service", "httpd.service"],
         unexpected_ports=[],
+        unexpected_services=[],
         compliance_score=100.0,
     )
 
@@ -25,8 +26,9 @@ def unhealthy_posture():
         selinux_mode="Permissive",
         firewall_state="stopped",
         open_ports=[22, 80, 4444],
-        running_services=["sshd", "httpd"],
+        running_services=["sshd.service", "httpd.service"],
         unexpected_ports=[4444],
+        unexpected_services=["suspicious.service"],
         compliance_score=50.0,
     )
 
