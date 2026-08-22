@@ -1,0 +1,22 @@
+version: 1
+
+default_action: deny
+
+rules:
+  - id: allow-web-to-app
+    source:
+      workload: WEB01
+    destination:
+      workload: APP01
+    protocol: tcp
+    port: 8080
+    action: allow
+
+  - id: allow-app-to-db
+    source:
+      workload: APP01
+    destination:
+      workload: DB01
+    protocol: tcp
+    port: 5432
+    action: allow
