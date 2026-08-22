@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zerotrust-rhel-fabric"
+version = "0.1.0"
+description = "Zero Trust security fabric for RHEL 10 workloads"
+requires-python = ">=3.12"
+
+[tool.setuptools.packages.find]
+include = ["controller*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
