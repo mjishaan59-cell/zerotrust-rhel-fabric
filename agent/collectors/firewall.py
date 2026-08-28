@@ -3,7 +3,7 @@ from agent.command_runner import run_command
 
 def collect_firewall_state() -> str:
     result = run_command(
-        ["firewall-cmd", "--state"]
+        ["sudo", "-n", "firewall-cmd", "--state"]
     )
 
     if result.return_code != 0:
