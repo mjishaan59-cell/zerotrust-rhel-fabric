@@ -48,15 +48,13 @@ class RiskEngine:
             )
 
         # Unexpected services
-        expected_service_count = len(posture.running_services)
-
-        if expected_service_count == 0:
-            reasons.append("no running-service baseline supplied")
-        else:
+        if not posture.unexpected_services:
             score += self.UNEXPECTED_SERVICES_POINTS
+            reasons.append("no unexpected services detected")
+        else:
             reasons.append(
-                f"running-service baseline contains "
-                f"{expected_service_count} service(s)"
+                f"unexpected services detected: "
+                f"{posture.unexpected_services}"
             )
 
         # Baseline compliance
@@ -66,6 +64,7 @@ class RiskEngine:
         ) * self.COMPLIANCE_POINTS
 
         score += compliance_points
+
         reasons.append(
             f"baseline compliance is {compliance:.1f}%"
         )
