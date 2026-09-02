@@ -8,7 +8,10 @@ from controller.api.schemas import (
     PostureReport,
     PostureResponse,
 )
-from controller.database.repository import save_posture_report
+from controller.database.repository import (
+    save_access_decision,
+    save_posture_report,
+)
 from controller.decision_engine import DecisionEngine
 from controller.models.access_request import AccessRequest
 from controller.models.security_posture import SecurityPosture
@@ -99,6 +102,11 @@ def evaluate_access(payload: AccessDecisionRequest):
     decision = decision_engine.evaluate(
         access_request,
         security_posture,
+    )
+
+    save_access_decision(
+        decision,
+        access_request,
     )
 
     return DecisionResponse(

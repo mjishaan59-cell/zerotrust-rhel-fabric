@@ -1,6 +1,7 @@
 from typing import Any
 
 from controller.database.connection import get_database_connection
+from controller.models.decision import Decision
 
 
 def save_posture_report(
@@ -86,6 +87,77 @@ def get_recent_posture_reports(limit: int = 20) -> list[dict[str, Any]]:
             collected_at
         FROM security_posture_reports
         ORDER BY collected_at DESC
+        LIMIT %(limit)s;
+    """
+
+    with get_database_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(query, {"limit": limit})
+            return list(cursor.fetchall())
+
+
+def save_access_decision(decision: Decision, request) -> int:
+    query = """
+        INSERT INTO access_decisions (
+            request_id,
+            source_workload,
+            destination_workload,
+            protocol,
+            destination_port,
+            identity,
+            action,
+            risk_score,
+            reason
+        )
+        VALUES (
+            %(request_id)s,
+            %(source_workload)s,
+            %(destination_workload)s,
+            %(protocol)s,
+            %(destination_port)s,
+            %(identity)s,
+            %(action)s,
+            %(risk_score)s,
+            %(reason)s
+        )
+        RETURNING id;
+    """
+
+    parameters = {
+        "request_id": decision.request_id,
+        "source_workload": request.source_workload,
+        "destination_workload": request.destination_workload,
+        "protocol": request.protocol,
+        "destination_port": request.destination_port,
+        "identity": request.identity,
+        "action": decision.action,
+        "risk_score": decision.risk_score,
+        "reason": decision.reason,
+    }
+
+    with get_database_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(query, parameters)
+            row = cursor.fetchone()
+            return int(row["id"])
+
+
+def get_recent_access_decisions(limit: int = 20) -> list[dict[str, Any]]:
+    query = """
+        SELECT
+            id,
+            request_id,
+            source_workload,
+            destination_workload,
+            protocol,
+            destination_port,
+            identity,
+            action,
+            risk_score,
+            reason,
+            decided_at
+        FROM access_decisions
+        ORDER BY decided_at DESC
         LIMIT %(limit)s;
     """
 
